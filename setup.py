@@ -9,7 +9,7 @@ setup(
     url='https://github.com/ryanbagwell/django-cms-nivo-slider',
     license='license.txt',
     description='A interface to use Google Custom Search in Django templates',
-    long_description=open('readme.rst').read(),
+    long_description=open('README.rst').read(),
     install_requires=[
         "Django >= 1.4",
     ],
