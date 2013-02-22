@@ -13,6 +13,6 @@ setup(
     install_requires=[
         "Django >= 1.4",
         "lxml >= 3.1",
-        
+        "requests >= 1.1.0",
     ],
 )
