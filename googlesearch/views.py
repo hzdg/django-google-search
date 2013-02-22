@@ -28,13 +28,49 @@ class SearchView(TemplateView):
             "//PARAM[@name='start']")[0].get('value', '1')
 
         context.update({
+        
+            """
+            The total number of pages returned in the result set
+            """
             'pages': self.get_pages() if self.results.findall(".//R") else [],
+            
+            
+            """
+            The total number of results in the result set
+            """
             'total_results': self.results.find(".//M"),
+            
+            
+            """
+            The number of the first result in the result set
+            """
             'start_index': start_index,
+            
+            """
+            The number of the last result in the result set
+            """
             'end_index': int(start_index) + len(self.results.findall(".//R")),
+            
+            
+            """
+            The number of the first result in the next page
+            """
             'prev_page': int(start_index) - 10,
+            
+            
+            """
+            The number of the last result in the previous page
+            """           
             'next_page': int(start_index) + 10,
+            
+            """
+            The returned search results
+            """                
             'results': self.results.findall(".//R"),
+            
+            """
+            The terms the user searched for
+            """            
             'search_terms': self.results.xpath(
                 "//PARAM[@name='q']")[0].get('value', '1'),
         })
@@ -49,11 +85,31 @@ class SearchView(TemplateView):
 
         try:
             params = '&'.join([
+                
+                """
+                The parameters to query
+                """
                 "q=%s" % self.request.GET.get(
                     'search_text', '').replace(' ', '+'),
+                    
+                """
+                The search engine ID
+                """
                 "cx=%s" % self.cse_id,
+                
+                """
+                The result number to start with
+                """
                 "start=%s" % self.request.GET.get('start', '0'),
+                
+                """
+                The result number to end with
+                """
                 "num=%s" % self.request.GET.get('num', '10'),
+                
+                """
+                The output type
+                """
                 "output=xml_no_dtd"
             ])
 

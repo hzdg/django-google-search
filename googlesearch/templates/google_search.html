@@ -1,16 +1,11 @@
-{% extends "interior.html" %}
-{% load html5boilerplate_tags sekizai_tags cms_tags %}
+<ul class="search-results">
+{% for result in results %}
+<li>
+	<h5>{{ result.title }}</h5>
+	<p>{{ result.snippet }} ...</p>
+	<a class="orange-arrow-link" href="{{ link }}">Read more</a>
+</li>
+{% endfor %}
+</ul>
 
-{% block article %}
 
-	<ul class="search-results">
-	{% for result in results %}
-		<li>
-			<h5>{{ result.title }}</h5>
-			<p>{{ result.snippet }} ...</p>
-			<a class="orange-arrow-link" href="{{ link }}">Read more</a>
-		</li>
-	{% endfor %}
-	</ul>
-	
-{% endblock %}
