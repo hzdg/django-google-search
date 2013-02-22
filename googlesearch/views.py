@@ -9,8 +9,8 @@ from lxml import etree
 """
 The main search display view
 """
-class SearchView(TemplateView):
-    template_name = "google_search.html"
+class ResultsView(TemplateView):
+    template_name = "search_results.html"
     version = getattr(settings, 'GOOGLE_SEARCH_API_VERSION', 'v1')
     api_key = getattr(settings, 'GOOGLE_SEARCH_API_KEY', None)
     cse_id = getattr(settings, 'GOOGLE_SEARCH_ENGINE_ID', None)
@@ -138,3 +138,11 @@ class SearchView(TemplateView):
             self.results.xpath("//PARAM[@name='start']")[0].get('value')) / 10))
 
         return [(i, (10 * i), (current_page == i)) for i in range(0, max_pages)]
+
+"""
+Displays a search form
+"""
+class SearchView(TemplateView):
+    template_name = "search_form.html"
+    
+    
