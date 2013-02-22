@@ -144,5 +144,4 @@ Displays a search form
 """
 class SearchView(TemplateView):
     template_name = "search_form.html"
-    
-    
+

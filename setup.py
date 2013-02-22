@@ -12,5 +12,7 @@ setup(
     long_description=open('README.rst').read(),
     install_requires=[
         "Django >= 1.4",
+        "lxml >= 3.1",
+        
     ],
 )
