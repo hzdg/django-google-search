@@ -1,6 +1,13 @@
-{% include 'googlesearch/includes/google_search_form.html' %}
+<h3 class="results-message">We found <b>{{ total_results }}</b> result{{ total_results|pluralize }} for <b class="search-terms">{{ search_terms }}</b></h3>
+
+{% include 'googlesearch/_search_form.html' %}
+
+
 
 {% if items %}
-{% include 'googlesearch/includes/google_search_results.html' %}
-{% include 'googlesearch/includes/google_search_form.html' %}
+    {% include 'googlesearch/_results.html' %}
 {% endif %}
+
+<div class="pagination">
+    {% show_pagination %}
+</div>

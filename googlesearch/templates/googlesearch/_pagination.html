@@ -1,6 +1,6 @@
 <ul class="pagination">
     <li class="prev">
-        <a href="?q={{ search_terms }}&amp;page={{ prev_page }}">Prev</a>
+        &laquo; <a href="?q={{ search_terms }}&amp;page={{ prev_page }}">Prev</a>
     </li>
     {% for page in pages %}
     <li class="page {% if current_page == page %}current{% endif %}">
@@ -8,6 +8,6 @@
     </li>
     {% endfor %}
     <li class="next">
-        <a href="?q={{ search_terms }}&amp;page={{ next_page }}">Next</a>
+        <a href="?q={{ search_terms }}&amp;page={{ next_page }}">Next</a> &raquo;
     </li>
 </ul>

@@ -5,7 +5,11 @@ Django app to show results from a Google Custom Search Engine or Google Site Sea
 
 1. Create a Google Custom Search Engine
 
-2. Add the following to settings.py:
+2. Enable API Access
+
+	https://code.google.com/apis/console
+
+3. Add the following to settings.py:
 
 	GOOGLE_SEARCH_API_KEY = 'YOUR API KEY'
 
