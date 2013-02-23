@@ -1,0 +1,9 @@
+<ul class="search-results">
+{% for item in items %}
+<li>
+	<h5>{{ item.title }}</h5>
+	<p>{{ item.snippet }}</p>
+	<a class="orange-arrow-link" href="{{ item.link }}">Read more</a>
+</li>
+{% endfor %}
+</ul>

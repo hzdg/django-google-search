@@ -1,15 +1,3 @@
-<ul class="search-results">
-{% for item in items %}
-<li>
-	<h5>{{ item.title }}</h5>
-	<p>{{ item.snippet }} ...</p>
-	<a class="orange-arrow-link" href="{{ item.link }}">Read more</a>
-</li>
-{% endfor %}
-</ul>
-
-
-
 <ul class="pagination">
     <li class="prev">
         <a href="?q={{ search_terms }}&amp;page={{ prev_page }}">Prev</a>
@@ -23,5 +11,3 @@
         <a href="?q={{ search_terms }}&amp;page={{ next_page }}">Next</a>
     </li>
 </ul>
-
-
