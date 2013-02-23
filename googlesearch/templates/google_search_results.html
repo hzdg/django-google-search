@@ -1,0 +1,27 @@
+<ul class="search-results">
+{% for item in items %}
+<li>
+	<h5>{{ item.title }}</h5>
+	<p>{{ item.snippet }} ...</p>
+	<a class="orange-arrow-link" href="{{ item.link }}">Read more</a>
+</li>
+{% endfor %}
+</ul>
+
+
+
+<ul class="pagination">
+    <li class="prev">
+        <a href="?q={{ search_terms }}&amp;page={{ prev_page }}">Prev</a>
+    </li>
+    {% for page in pages %}
+    <li class="page {% if current_page == page %}current{% endif %}">
+        <a href="?q={{ search_terms }}&amp;page={{ page }}">{{ page }}<a>
+    </li>
+    {% endfor %}
+    <li class="next">
+        <a href="?q={{ search_terms }}&amp;page={{ next_page }}">Next</a>
+    </li>
+</ul>
+
+

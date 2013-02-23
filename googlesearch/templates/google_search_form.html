@@ -1,0 +1,6 @@
+{% block search_form %}
+<form id="search-form" action="/search/" method="get">
+    <label style="visibility: hidden;" for="search-box">{% block search_form_label %}Enter Search Terms{% endblock %}</label>
+    {% block search_form_input %}<input type="text" name="q" id="search-box">{% endblock %}
+</form>
+{% endblock %}
