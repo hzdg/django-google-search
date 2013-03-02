@@ -15,9 +15,10 @@ The main search display view
 class SearchView(TemplateView):
     template_name = "googlesearch/google_search.html"
 
+
     @property
     def endpoint(self):
-        return "https://www.googleapis.com/customsearch/%s/" % (self.api_version)
+        return "https://www.googleapis.com/customsearch/%s/" % (api_version)
 
     def get_context_data(self, **kwargs):
 
@@ -73,7 +74,7 @@ class SearchView(TemplateView):
             'alt': 'json',
             'num': results_per_page,
             'sort': GET.get('sort', 'date-sdate:d:s')
-        }
+        }   
 
         try:
             r = requests.get(self.endpoint, params=params)
