@@ -10,9 +10,6 @@ def show_pagination(context, pages_to_show=10):
     max_pages = int(math.ceil(context['total_results'] /
                               settings.GOOGLE_SEARCH_RESULTS_PER_PAGE))
 
-    last_page = int(context['current_page']) + pages_to_show - 1
-    last_page = max_pages if last_page > max_pages else last_page
-
     prev_page = context['current_page'] - 1
     next_page = context['current_page'] + 1
 
