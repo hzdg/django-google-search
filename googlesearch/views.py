@@ -14,7 +14,8 @@ class SearchView(TemplateView):
 
     @property
     def endpoint(self):
-        return "https://www.googleapis.com/customsearch/%s/" % (api_version)
+        return "https://www.googleapis.com/customsearch/%s/" % (
+            settings.GOOGLE_SEARCH_API_VERSION)
 
     def get_context_data(self, **kwargs):
 
@@ -63,14 +64,14 @@ class SearchView(TemplateView):
     def get_results(self, GET):
 
         params = {
-            'key': api_key,
+            'key': settings.GOOGLE_SEARCH_API_KEY,
             'q': GET.get('q', '').replace(' ', '+'),
-            'cx': cse_id,
+            'cx': settings.GOOGLE_SEARCH_ENGINE_ID,
             'start': int(GET.get('page', 1)),
             'alt': 'json',
-            'num': results_per_page,
+            'num': settings.GOOGLE_SEARCH_RESULTS_PER_PAGE,
             'sort': GET.get('sort', 'date-sdate:d:s')
-        }   
+        }
 
         try:
             r = requests.get(self.endpoint, params=params)
