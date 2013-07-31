@@ -85,8 +85,7 @@ class SearchView(TemplateView):
         }
 
         try:
-            r = requests.get(self.endpoint, params=params)
-
+            return requests.get(self.endpoint, params=params).json()
         except Exception as e:
             logging.warning("Google Custom Search Error: %s" % (str(e)))
             return False
