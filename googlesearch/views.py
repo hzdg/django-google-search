@@ -11,7 +11,6 @@ The main search display view
 class SearchView(TemplateView):
     template_name = "googlesearch/google_search.html"
 
-
     @property
     def endpoint(self):
         return "https://www.googleapis.com/customsearch/%s/" % (
@@ -75,7 +74,6 @@ class SearchView(TemplateView):
 
         try:
             r = requests.get(self.endpoint, params=params)
-            return simplejson.loads(r.text, object_hook=decode_hook)
 
         except Exception as e:
             logging.warning("Google Custom Search Error: %s" % (str(e)))
