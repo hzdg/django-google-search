@@ -4,7 +4,7 @@
     </li>
     {% for page in pages %}
     <li class="page {% if current_page == page %}current{% endif %}">
-        <a href="?q={{ search_terms }}&amp;page={{ page }}">{{ page }}<a>
+        <a href="?q={{ search_terms }}&amp;page={{ page }}">{{ page }}</a>
     </li>
     {% endfor %}
     <li class="next">
