@@ -1,11 +1,7 @@
-from django.conf import settings
 from django.views.generic import TemplateView
-import math
+from .conf import settings
 import logging
 import requests
-from django.utils import simplejson
-from .utils import *
-from . import *
 
 """
 The main search display view
