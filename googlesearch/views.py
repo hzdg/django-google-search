@@ -1,11 +1,7 @@
-from django.conf import settings
 from django.views.generic import TemplateView
-import math
+from .conf import settings
 import logging
 import requests
-from django.utils import simplejson
-from .utils import *
-from . import *
 
 """
 The main search display view
@@ -15,50 +11,62 @@ The main search display view
 class SearchView(TemplateView):
     template_name = "googlesearch/google_search.html"
 
-
     @property
     def endpoint(self):
-        return "https://www.googleapis.com/customsearch/%s/" % (api_version)
+        return "https://www.googleapis.com/customsearch/%s/" % (
+            settings.GOOGLE_SEARCH_API_VERSION)
 
     def get_context_data(self, **kwargs):
 
         context = super(SearchView, self).get_context_data(**kwargs)
 
-        if len(self.request.GET) == 0:
+        cse_data = self.get_results(self.request.GET)
+
+        if cse_data and 'queries' in cse_data:
+
+            current_page = self.request.GET.get('page', 1)
+
+            if 'nextPage' in cse_data['queries']:
+                # Super fragile lets hope it works
+                next_page = cse_data['queries']['nextPage'][0]['startIndex']
+            else:
+                next_page = self.request.GET.get('page', 1)
+
+            if 'previousPage' in cse_data['queries']:
+                # Super fragile lets hope it works
+                prev_page = cse_data[
+                    'queries']['previousPage'][0]['startIndex']
+            else:
+                prev_page = 0
+
+            items = cse_data.get('items', [])
+
+            context.update({
+                'items': items,
+                'total_results': int(
+                    cse_data['queries']['request'][0]['totalResults']),
+                'current_page': int(current_page),
+                'prev_page': int(prev_page),
+                'next_page': int(next_page),
+                'search_terms': cse_data[
+                    'queries']['request'][0]['searchTerms']
+            })
+
             return context
 
-        json = self.get_results(self.request.GET)
+        else:
 
-        if json is False:
+            context.update({
+                'items': [],
+                'total_results': 0,
+                'current_page': 0,
+                'prev_page': 0,
+                'next_page': 0,
+                'search_terms': self.request.GET.get('q'),
+                'error': cse_data
+            })
+
             return context
-
-        current_page = self.request.GET.get('page', 1)
-
-        try:
-            prev_page = json.queries.previousPage[0].startIndex
-        except:
-            prev_page = 1
-
-        try:
-            next_page = json.queries.nextPage[0].startIndex
-        except:
-            next_page = self.request.GET.get('page', 1)
-
-        try:
-            items = json.items
-        except:
-            items = []
-
-        context.update({
-            'items': items,
-            'total_results': int(json.queries.request[0].totalResults),
-            'current_page': int(current_page),
-            'prev_page': int(prev_page),
-            'next_page': int(next_page),
-            'search_terms': json.queries.request[0].searchTerms,
-        })
-
-        return context
 
     """
     Makes the request to Google and returns
@@ -67,19 +75,17 @@ class SearchView(TemplateView):
     def get_results(self, GET):
 
         params = {
-            'key': api_key,
+            'key': settings.GOOGLE_SEARCH_API_KEY,
             'q': GET.get('q', '').replace(' ', '+'),
-            'cx': cse_id,
+            'cx': settings.GOOGLE_SEARCH_ENGINE_ID,
             'start': int(GET.get('page', 1)),
             'alt': 'json',
-            'num': results_per_page,
+            'num': settings.GOOGLE_SEARCH_RESULTS_PER_PAGE,
             'sort': GET.get('sort', 'date-sdate:d:s')
-        }   
+        }
 
         try:
-            r = requests.get(self.endpoint, params=params)
-            return simplejson.loads(r.text, object_hook=decode_hook)
-
+            return requests.get(self.endpoint, params=params).json()
         except Exception as e:
             logging.warning("Google Custom Search Error: %s" % (str(e)))
             return False
