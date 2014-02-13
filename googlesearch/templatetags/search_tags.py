@@ -17,7 +17,7 @@ def show_pagination(context, pages_to_show=10):
         user-specified maximum page, or the
         last page that was returned, whichever
         was lower """
-    last_page = min([GOOGLE_SEARCH_MAX_PAGES, last_page])
+    last_page = min([GOOGLE_SEARCH_MAX_PAGES, int(last_page)])
 
     prev_page = context['current_page'] - 1
 
