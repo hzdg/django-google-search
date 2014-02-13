@@ -1,3 +1,4 @@
+{% load search_tags %}
 <h3 class="results-message">We found <b>{{ total_results }}</b> result{{ total_results|pluralize }} for <b class="search-terms">{{ search_terms }}</b></h3>
 
 {% include 'googlesearch/_search_form.html' %}

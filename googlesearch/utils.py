@@ -1,15 +1,18 @@
+import pprint
+from . import *
 
 
-"""
-A hook for our JSON decoding parser
-"""
+class SearchResults(dict):
+    items = []
+    total_results = 0
+    search_terms = ''
 
 
-def decode_hook(parsed_dict):
+    def __init__(self, dict={}):
+        super(SearchResults, self).__init__(dict)
 
-    class Object(object):
+        self.total_results = int(self.get('searchInformation', {}).get('totalResults', 0))
 
-        def __init__(self, parsed_dict):
-            self.__dict__.update(**parsed_dict)
+        self.search_terms = self.get('queries', {}).get('request',[])[0].get('searchTerms', '')
 
-    return Object(parsed_dict)
+

@@ -22,6 +22,7 @@ Installation and configuration
     GOOGLE_SEARCH_API_KEY = 'YOUR API KEY'
     GOOGLE_SEARCH_ENGINE_ID = 'YOUR GOOGLE SEARCH ENGINE ID'
     GOOGLE_SEARCH_API_VERSION = 'v1' #(optional. defaults to v1)
+    GOOGLE_SEARCH_RESULTS_PER_PAGE = '20'
 
 3. Create the URL for your search page. In urls.py::
 

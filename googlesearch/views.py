@@ -1,91 +1,75 @@
 from django.views.generic import TemplateView
-from .conf import settings
-import logging
-import requests
+from apiclient.discovery import build
+from .utils import SearchResults
+from  . import *
 
-"""
-The main search display view
-"""
 
 
 class SearchView(TemplateView):
-    template_name = "googlesearch/google_search.html"
+    template_name = "googlesearch/search_results.html"
 
-    @property
-    def endpoint(self):
-        return "https://www.googleapis.com/customsearch/%s/" % (
-            settings.GOOGLE_SEARCH_API_VERSION)
 
     def get_context_data(self, **kwargs):
 
         context = super(SearchView, self).get_context_data(**kwargs)
 
-        cse_data = self.get_results(self.request.GET)
+        service = build("customsearch", GOOGLE_SEARCH_API_VERSION,
+            developerKey=GOOGLE_SEARCH_API_KEY)
 
-        if cse_data and 'queries' in cse_data:
+        results = service.cse().list(
+                q=self.request.GET.get('q', ''),
+                start=self.page_to_index(),
+                num=GOOGLE_SEARCH_RESULTS_PER_PAGE,
+                cx=GOOGLE_SEARCH_ENGINE_ID,
+            ).execute()
 
-            current_page = self.request.GET.get('page', 1)
+        results = SearchResults(results)
 
-            if 'nextPage' in cse_data['queries']:
-                # Super fragile lets hope it works
-                next_page = cse_data['queries']['nextPage'][0]['startIndex']
-            else:
-                next_page = self.request.GET.get('page', 1)
+        """ Set some defaults """
+        context.update({
+            'items': [],
+            'total_results': 0,
+            'current_page': 0,
+            'prev_page': 0,
+            'next_page': 0,
+            'search_terms': self.request.GET.get('q', ''),
+            'error': results
+        })
 
-            if 'previousPage' in cse_data['queries']:
-                # Super fragile lets hope it works
-                prev_page = cse_data[
-                    'queries']['previousPage'][0]['startIndex']
-            else:
-                prev_page = 0
+        """ Now parse the results and send back some
+            useful data """
 
-            items = cse_data.get('items', [])
+        pages = self.calculate_pages()
 
-            context.update({
-                'items': items,
-                'total_results': int(
-                    cse_data['queries']['request'][0]['totalResults']),
-                'current_page': int(current_page),
-                'prev_page': int(prev_page),
-                'next_page': int(next_page),
-                'search_terms': cse_data[
-                    'queries']['request'][0]['searchTerms']
+        context.update({
+                'items': results.items,
+                'total_results': results.total_results,
+                'current_page': pages[1],
+                'prev_page': pages[0],
+                'next_page': pages[2],
+                'search_terms': results.search_terms,
             })
 
-            return context
 
-        else:
+        return context
 
-            context.update({
-                'items': [],
-                'total_results': 0,
-                'current_page': 0,
-                'prev_page': 0,
-                'next_page': 0,
-                'search_terms': self.request.GET.get('q'),
-                'error': cse_data
-            })
 
-            return context
+    def calculate_pages(self):
+        """ Returns a tuple consisting of
+            the previous page, the current page,
+            and the next page """
 
-    """
-    Makes the request to Google and returns
-    matching pages in json
-    """
-    def get_results(self, GET):
+        current_page = int(self.request.GET.get('p', 1))
+        return (current_page - 1, current_page, current_page + 1,)
 
-        params = {
-            'key': settings.GOOGLE_SEARCH_API_KEY,
-            'q': GET.get('q', '').replace(' ', '+'),
-            'cx': settings.GOOGLE_SEARCH_ENGINE_ID,
-            'start': int(GET.get('page', 1)),
-            'alt': 'json',
-            'num': settings.GOOGLE_SEARCH_RESULTS_PER_PAGE,
-            'sort': GET.get('sort', 'date-sdate:d:s')
-        }
 
-        try:
-            return requests.get(self.endpoint, params=params).json()
-        except Exception as e:
-            logging.warning("Google Custom Search Error: %s" % (str(e)))
-            return False
+
+    def page_to_index(self, page=None):
+
+        """ Converts a page to the start index """
+
+        if page is None:
+            page = self.request.GET.get('p', 1)
+
+        return int(page) * int(GOOGLE_SEARCH_RESULTS_PER_PAGE) + 1 -  int(GOOGLE_SEARCH_RESULTS_PER_PAGE)
+
