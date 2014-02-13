@@ -1,2 +1,3 @@
 include README.rst
-recursive-include googlesearch/templates/**
+recursive-include googlesearch/templates *
+recursive-include googlesearch/templatetags *
