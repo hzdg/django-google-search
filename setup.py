@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='django-google-search',
-    version='0.1.1',
+    version='1.0',,
     author='Ryan Bagwell',
     author_email='ryan@ryanbagwell.com',
     packages=['googlesearch'],
