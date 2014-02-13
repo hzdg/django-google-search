@@ -26,3 +26,5 @@ class SearchResults(dict):
 
         self.search_terms = self.get('queries', {}).get(
             'request', [])[0].get('searchTerms', '')
+
+        self.items = self.get('items', [])
