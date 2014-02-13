@@ -1,6 +1,5 @@
 import math
 from django import template
-#from ..conf import settings
 from .. import *
 
 
