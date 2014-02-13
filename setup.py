@@ -14,5 +14,6 @@ setup(
     install_requires=[
         "Django >= 1.3",
         "requests >= 2.0",
+        "google-api-python-client == 1.2",
     ],
 )
