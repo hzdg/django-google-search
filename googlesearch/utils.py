@@ -3,6 +3,16 @@ from . import *
 
 
 class SearchResults(dict):
+    """ This is a wrapper that provides easy
+        access to common parameters of the
+        very complex search results dictionary
+
+        Takes one argument:
+
+        dict: a dictionary of search results
+
+    """
+
     items = []
     total_results = 0
     search_terms = ''
