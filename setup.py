@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-google-search',
-    version='1.0',
+    version='1.1',
     author='Ryan Bagwell',
     author_email='ryan@ryanbagwell.com',
     packages=find_packages(),
