@@ -1,13 +1,13 @@
 <ul class="pagination">
     <li class="prev">
-        &laquo; <a href="?q={{ search_terms }}&amp;page={{ prev_page }}">Prev</a>
+        &laquo; <a href="?q={{ search_terms }}&amp;p={{ prev_page }}">Prev</a>
     </li>
     {% for page in pages %}
     <li class="page {% if current_page == page %}current{% endif %}">
-        <a href="?q={{ search_terms }}&amp;page={{ page }}">{{ page }}</a>
+        <a href="?q={{ search_terms }}&amp;p={{ page }}">{{ page }}</a>
     </li>
     {% endfor %}
     <li class="next">
-        <a href="?q={{ search_terms }}&amp;page={{ next_page }}">Next</a> &raquo;
+        <a href="?q={{ search_terms }}&amp;p={{ next_page }}">Next</a> &raquo;
     </li>
 </ul>
