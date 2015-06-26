@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView
-from apiclient.discovery import build
+#from apiclient.discovery import build
+from googleapiclient.discovery import build
 from .utils import SearchResults
 from . import *
 
@@ -14,14 +15,36 @@ class SearchView(TemplateView):
         service = build("customsearch", GOOGLE_SEARCH_API_VERSION,
                         developerKey=GOOGLE_SEARCH_API_KEY)
 
-        results = service.cse().list(
-            q=self.request.GET.get('q', ''),
-            start=self.page_to_index(),
-            num=GOOGLE_SEARCH_RESULTS_PER_PAGE,
-            cx=GOOGLE_SEARCH_ENGINE_ID,
-        ).execute()
+        #add a "try" block to see if googleapiclient throws a 400 error
+        try:
+            results = service.cse().list(
+                q=self.request.GET.get('q', ''),
+                start=self.page_to_index(),
+                num=GOOGLE_SEARCH_RESULTS_PER_PAGE,
+                cx=GOOGLE_SEARCH_ENGINE_ID,
+            ).execute()
 
-        results = SearchResults(results)
+            results = SearchResults(results)
+            pages = self.calculate_pages()
+
+        #if googleapiclient raises an error, we need to catch it here
+        except:
+
+            #run the search again starting with a defined page 1 instead of the "user" defined
+            results = service.cse().list(
+                q=self.request.GET.get('q', ''),
+                start=1,
+                num=GOOGLE_SEARCH_RESULTS_PER_PAGE,
+                cx=GOOGLE_SEARCH_ENGINE_ID,
+            ).execute()
+
+            #set some default values used for the context below
+            page = 1
+
+            # previous, current, next pages
+            pages = [0, 1, 2]
+
+            results = SearchResults(results)
 
         """ Set some defaults """
         context.update({
@@ -36,8 +59,6 @@ class SearchView(TemplateView):
 
         """ Now parse the results and send back some
             useful data """
-
-        pages = self.calculate_pages()
 
         context.update({
             'items': results.items,
@@ -56,7 +77,7 @@ class SearchView(TemplateView):
             and the next page """
 
         current_page = int(self.request.GET.get('p', 1))
-        return (current_page - 1, current_page, current_page + 1,)
+        return (current_page - 1, current_page, current_page + 1)
 
     def page_to_index(self, page=None):
         """ Converts a page to the start index """
